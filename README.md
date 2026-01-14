@@ -10,6 +10,8 @@
 
 [![](https://results.pre-commit.ci/badge/github/quertenmont/django-msgspec-field/main.svg)](https://results.pre-commit.ci/latest/github/quertenmont/django-msgspec-field/main)
 [![](https://img.shields.io/github/actions/workflow/status/quertenmont/django-msgspec-field/python-test.yml?branch=main&label=build&logo=github)](https://github.com/quertenmont/django-msgspec-field)
+[![](https://codecov.io/gh/quertenmont/django-msgspec-field/branch/main/graph/badge.svg)](https://codecov.io/gh/quertenmont/django-msgspec-field)
+[![](https://img.shields.io/badge/type%20checked-mypy-blue.svg?logo=python)](https://mypy-lang.org/)
 [![](https://img.shields.io/badge/code%20style-ruff-000000.svg?logo=ruff&logoColor=D7FF64)](https://github.com/astral-sh/ruff)
 
 Django JSONField with msgspec structs as a Schema.

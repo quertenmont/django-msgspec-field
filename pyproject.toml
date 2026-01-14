@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "django-msgspec-field"
-version = "0.1.6"
+version = "0.1.7"
 description = "Django JSONField with msgspec structs as a Schema. Fork of django-pydantic-field."
 readme = "README.md"
 license = "MIT"
@@ -51,6 +51,7 @@ dev = [
     "mypy",
     "pre-commit",
     "pytest>=7.4,<9",
+    "pytest-cov",
     "djangorestframework>=3.11,<4",
     "django-stubs[compatible-mypy]>=5.2",
     "djangorestframework-stubs[compatible-mypy]>=3.16",

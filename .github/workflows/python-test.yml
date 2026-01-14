@@ -95,5 +95,12 @@ jobs:
         sudo apt update && sudo apt install -qy python3-dev default-libmysqlclient-dev build-essential
     - name: Install dependencies
       run: uv sync --all-extras
-    - name: Test package
-      run: uv run pytest
+    - name: Test package with coverage
+      run: uv run pytest --cov=django_msgspec_field --cov-report=xml
+    - name: Upload coverage to Codecov
+      if: matrix.python-version == '3.12'
+      uses: codecov/codecov-action@v4
+      with:
+        files: ./coverage.xml
+        fail_ci_if_error: false
+        token: ${{ secrets.CODECOV_TOKEN }}
