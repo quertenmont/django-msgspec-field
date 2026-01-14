@@ -379,13 +379,16 @@ def get_origin_type(cls: type):
 
 def evaluate_forward_ref(ref: ty.ForwardRef, ns: ty.Mapping[str, ty.Any]) -> ty.Any:
     """Evaluate a forward reference in a namespace."""
+    # Python 3.14+ has typing.evaluate_forward_ref with keyword-only arguments
     eval_func = getattr(ty, "evaluate_forward_ref", None)
     if eval_func is not None:
-        return eval_func(ref, dict(ns), {})
+        return eval_func(ref, globals=dict(ns), locals={})
 
+    # Python 3.13+ has ForwardRef.evaluate method
     if hasattr(ref, "evaluate"):
-        return ref.evaluate(globalns=dict(ns), localns={})  # type: ignore
+        return ref.evaluate(globals=dict(ns), locals={})  # type: ignore
 
+    # Fallback for older Python versions
     if sys.version_info >= (3, 13):
         return ref._evaluate(dict(ns), {}, type_params=(), recursive_guard=frozenset())
     return ref._evaluate(dict(ns), {}, recursive_guard=frozenset())
