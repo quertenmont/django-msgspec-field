@@ -99,8 +99,9 @@ jobs:
       run: uv run pytest --cov=django_msgspec_field --cov-report=xml
     - name: Upload coverage to Codecov
       if: matrix.python-version == '3.12'
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: quertenmont/django-msgspec-field
         files: ./coverage.xml
         fail_ci_if_error: false
-        token: ${{ secrets.CODECOV_TOKEN }}
