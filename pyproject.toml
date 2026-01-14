@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "django-msgspec-field"
-version = "0.1.4"
+version = "0.1.5"
 description = "Django JSONField with msgspec structs as a Schema. Fork of django-pydantic-field."
 readme = "README.md"
 license = "MIT"
@@ -21,13 +21,6 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Framework :: Django",
-    "Framework :: Django :: 3",
-    "Framework :: Django :: 3.1",
-    "Framework :: Django :: 3.2",
-    "Framework :: Django :: 4",
-    "Framework :: Django :: 4.0",
-    "Framework :: Django :: 4.1",
-    "Framework :: Django :: 4.2",
     "Framework :: Django :: 5",
     "Framework :: Django :: 5.0",
     "Framework :: Django :: 5.1",
