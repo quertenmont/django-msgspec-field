@@ -296,6 +296,10 @@ Released under [MIT License](LICENSE).
 - :blue_heart: Follow me on [Twitter](https://twitter.com/LoicQuertenmont)
 - :moneybag: Sponsor me on [Github](https://github.com/sponsors/quertenmont)
 
+You can also support me via:
+- [Buy me a coffee](https://buymeacoffee.com/loicquerten)
+- [PayPal donation](https://www.paypal.com/donate/?business=JQ7Y92B9BTCGE&no_recurring=0&currency_code=EUR)
+
 ---
 
 ## Acknowledgement
