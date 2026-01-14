@@ -1,0 +1,16 @@
+.DS_Store
+.idea
+*.log
+tmp/
+
+dist/
+.env*/
+.venv*/
+.mypy_cache/
+*.py[cod]
+*.egg
+*.egg-info/
+build
+htmlcov
+
+.python-version

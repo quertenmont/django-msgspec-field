@@ -1,0 +1,126 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "django-msgspec-field"
+version = "0.1.0"
+description = "Django JSONField with msgspec structs as a Schema. Fork of django-pydantic-field."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Loic Quertenmont", email = "loic@quertenmont.com" },
+]
+maintainers = [
+    { name = "Loic Quertenmont", email = "loic@quertenmont.com" },
+]
+
+keywords = ["django", "msgspec", "json", "schema", "struct"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Framework :: Django",
+    "Framework :: Django :: 3",
+    "Framework :: Django :: 3.1",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4",
+    "Framework :: Django :: 4.0",
+    "Framework :: Django :: 4.1",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+
+requires-python = ">=3.10"
+dependencies = [
+    "msgspec>=0.18.0",
+    "django>=3.1,<6",
+    "typing_extensions",
+]
+
+[project.optional-dependencies]
+openapi = ["uritemplate", "inflection"]
+coreapi = ["coreapi"]
+jsonform = ["django_jsonform>=2.0,<3"]
+dev = [
+    "ruff",
+    "mypy",
+    "pre-commit",
+    "pytest>=7.4,<9",
+    "djangorestframework>=3.11,<4",
+    "django-stubs[compatible-mypy]>=5.2",
+    "djangorestframework-stubs[compatible-mypy]>=3.16",
+    "pytest-django>=4.5,<6",
+]
+test = [
+    "django_msgspec_field[openapi,coreapi,jsonform]",
+    "dj-database-url>=2.0",
+    "djangorestframework>=3,<4",
+    "pyyaml",
+    "syrupy>=3,<5",
+]
+ci = [
+    "psycopg[binary]>=3.1,<4",
+    "mysqlclient>=2.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/quertenmont/django-msgspec-field"
+Documentation = "https://github.com/quertenmont/django-msgspec-field"
+Source = "https://github.com/quertenmont/django-msgspec-field"
+Changelog = "https://github.com/quertenmont/django-msgspec-field/releases"
+Issues = "https://github.com/quertenmont/django-msgspec-field/issues"
+
+[project.scripts]
+# No CLI entry points for this library
+
+[dependency-groups]
+dev = [
+    "django_msgspec_field[dev,test]",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["django_msgspec_field"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/django_msgspec_field",
+    "/README.md",
+    "/LICENSE",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.mypy]
+plugins = [
+    "mypy_django_plugin.main",
+    "mypy_drf_plugin.main"
+]
+exclude = [".env", ".venv", "tests"]
+
+[tool.django-stubs]
+django_settings_module = "tests.settings.django_test_settings"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.settings.django_test_settings"
+
+addopts = "--capture=no"
+pythonpath = ["."]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_tests.py"]
+norecursedirs = [".*", "venv"]
+
+[tool.pyright]
+include = ["django_msgspec_field"]
