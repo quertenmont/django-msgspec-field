@@ -216,7 +216,7 @@ def test_export_kwargs_support(export_kwargs):
 
 
 def _test_field_serialization(field):
-    _, _, args, kwargs = field_data = field.deconstruct()
+    _, _, args, kwargs = field.deconstruct()
 
     reconstructed_field = fields.MsgspecSchemaField(*args, **kwargs)
     assert field.get_default() == reconstructed_field.get_default()

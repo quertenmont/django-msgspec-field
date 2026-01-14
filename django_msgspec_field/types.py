@@ -379,4 +379,6 @@ def get_origin_type(cls: type):
 
 def evaluate_forward_ref(ref: ty.ForwardRef, ns: ty.Mapping[str, ty.Any]) -> ty.Any:
     """Evaluate a forward reference in a namespace."""
+    if sys.version_info >= (3, 13):
+        return ref._evaluate(dict(ns), {}, type_params=None, recursive_guard=frozenset())
     return ref._evaluate(dict(ns), {}, recursive_guard=frozenset())

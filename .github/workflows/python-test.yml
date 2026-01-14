@@ -52,7 +52,7 @@ jobs:
     - name: Install dependencies
       run: uv sync --all-extras
     - name: Run pre-commit
-      run: pre-commit run --show-diff-on-failure --color=always --all-files
+      run: uv run pre-commit run --show-diff-on-failure --color=always --all-files
 
   test:
     runs-on: ubuntu-latest
