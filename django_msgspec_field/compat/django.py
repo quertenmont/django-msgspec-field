@@ -76,6 +76,14 @@ class GenericContainer(BaseContainer):
             return origin
 
         unwrapped_args = tuple(map(BaseContainer.unwrap, value.args))
+
+        # Special handling for UnionType - must use | operator to reconstruct
+        if origin is types.UnionType:
+            result = unwrapped_args[0]
+            for arg in unwrapped_args[1:]:
+                result = result | arg
+            return result
+
         try:
             return origin[unwrapped_args]
         except TypeError:
