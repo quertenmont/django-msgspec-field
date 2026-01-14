@@ -115,7 +115,7 @@ class MsgspecSchemaField(JSONField, ty.Generic[types.ST]):
 
         # Get the schema - try prepared_schema first (if adapter is bound), otherwise use original
         schema = self.schema
-        if schema is None and self.adapter.is_bound:
+        if (schema is None or isinstance(schema, (ty.ForwardRef, str))) and self.adapter.is_bound:
             try:
                 schema = self.adapter.prepared_schema
             except types.ImproperlyConfiguredSchema:

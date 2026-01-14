@@ -182,11 +182,20 @@ AnnotatedAlias = te._AnnotatedAlias
 
 if sys.version_info >= (3, 14):
     GenericTypes: ty.Tuple[ty.Any, ...] = (types.GenericAlias, type(ty.List[int]), type(ty.List), ty.Union)
+elif sys.version_info >= (3, 10):
+    GenericTypes = (
+        types.GenericAlias,
+        type(ty.List[int]),
+        type(ty.List),
+        type(ty.Union[int, str]),
+        types.UnionType,
+    )
 else:
     GenericTypes = (
         types.GenericAlias,
         type(ty.List[int]),
         type(ty.List),
+        type(ty.Union[int, str]),
     )
 
 
@@ -203,17 +212,20 @@ MigrationWriter.register_serializer(type(ty.Union), TypingSerializer)  # type: i
 MigrationWriter.register_serializer(ty._SpecialForm, TypingSerializer)  # type: ignore
 
 
-UnionType = types.UnionType
+if sys.version_info >= (3, 10):
+    UnionType = (types.UnionType, type(ty.Union[int, str]))
+else:
+    UnionType = (type(ty.Union[int, str]),)
 
 
 class UnionTypeSerializer(BaseSerializer):
     """Serializer for Union types."""
 
-    value: UnionType
+    value: ty.Any
 
     def serialize(self):
         imports = set()
-        if isinstance(self.value, (type(ty.Union), types.UnionType)):  # type: ignore
+        if isinstance(self.value, (type(ty.Union), *UnionType)):  # type: ignore
             imports.add("import typing")
 
         for arg in get_args(self.value):
@@ -223,7 +235,8 @@ class UnionTypeSerializer(BaseSerializer):
         return repr(self.value), imports
 
 
-MigrationWriter.register_serializer(UnionType, UnionTypeSerializer)
+for union_type in UnionType:
+    MigrationWriter.register_serializer(union_type, UnionTypeSerializer)
 
 
 # msgspec.Meta serializer

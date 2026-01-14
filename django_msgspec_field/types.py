@@ -157,7 +157,7 @@ class SchemaAdapter(ty.Generic[ST]):
             return self._decoder.decode(value)
         except msgspec.DecodeError:
             raise
-        except msgspec.ValidationError:
+        except msgspec.ValidationError:  # type: ignore
             raise
 
     def dump_python(self, value: ty.Any, **override_kwargs) -> ty.Any:
@@ -329,7 +329,7 @@ class SchemaAdapter(ty.Generic[ST]):
 def get_annotations(obj: ty.Any) -> dict[str, ty.Any]:
     """Get annotations from an object."""
     try:
-        from annotationlib import get_annotations as _get_annotations  # Python >= 3.14
+        from annotationlib import get_annotations as _get_annotations  # type: ignore[import-not-found]
 
         return _get_annotations(obj)
     except ImportError:
@@ -384,7 +384,7 @@ def evaluate_forward_ref(ref: ty.ForwardRef, ns: ty.Mapping[str, ty.Any]) -> ty.
         return eval_func(ref, dict(ns), {})
 
     if hasattr(ref, "evaluate"):
-        return ref.evaluate(globalns=dict(ns), localns={})
+        return ref.evaluate(globalns=dict(ns), localns={})  # type: ignore
 
     if sys.version_info >= (3, 13):
         return ref._evaluate(dict(ns), {}, type_params=(), recursive_guard=frozenset())
