@@ -7,7 +7,6 @@ from __future__ import annotations
 import typing as ty
 
 import typing_extensions as te
-from django.db.models.fields import NOT_PROVIDED
 from django.db.models.fields.json import JSONField
 from django.db.models.expressions import BaseExpression
 
@@ -68,11 +67,5 @@ def SchemaField(
     null: ty.Literal[False] = ...,
     **kwargs: te.Unpack[_SchemaFieldKwargs],
 ) -> ST: ...
-def SchemaField(
-    schema=None,
-    default=NOT_PROVIDED,
-    *args,
-    **kwargs,
-) -> ty.Any: ...
 
 class MsgspecSchemaField(JSONField, ty.Generic[ST]): ...
