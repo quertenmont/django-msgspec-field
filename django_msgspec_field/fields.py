@@ -87,9 +87,12 @@ class MsgspecSchemaField(JSONField, ty.Generic[types.ST]):
         self,
         *args,
         schema: type[types.ST] | te.Annotated[type[types.ST], ...] | BaseContainer | ty.ForwardRef | str | None = None,
+        default: types.ST | ty.Callable[[], types.ST] | BaseExpression | None = NOT_PROVIDED,  # type: ignore[assignment]
         **kwargs,
     ):
         kwargs.setdefault("encoder", DjangoJSONEncoder)
+        if default is not NOT_PROVIDED:
+            kwargs["default"] = default
         self.export_kwargs = export_kwargs = types.SchemaAdapter.extract_export_kwargs(kwargs)
         super().__init__(*args, **kwargs)
 

@@ -68,4 +68,11 @@ def SchemaField(
     **kwargs: te.Unpack[_SchemaFieldKwargs],
 ) -> ST: ...
 
-class MsgspecSchemaField(JSONField, ty.Generic[ST]): ...
+class MsgspecSchemaField(JSONField, ty.Generic[ST]):
+    def __init__(
+        self,
+        *args,
+        schema: type[ST] | te.Annotated[type[ST], ...] | ty.ForwardRef | str | None = ...,
+        default: ST | ty.Callable[[], ST] | BaseExpression | None = ...,
+        **kwargs: te.Unpack[_SchemaFieldKwargs],
+    ) -> None: ...
