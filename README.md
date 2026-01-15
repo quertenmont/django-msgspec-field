@@ -244,6 +244,73 @@ class FooClassBasedView(views.APIView):
         return Response([request.data])
 ```
 
+## Global Settings
+
+You can configure default `enc_hook` and `dec_hook` functions that will be used across all `SchemaField` instances when no custom hook is explicitly provided. This is useful for handling custom types globally without repeating the hook configuration on every field.
+
+Add the `DJANGO_MSGSPEC_FIELD` setting to your Django `settings.py`:
+
+```python
+# settings.py
+
+def my_enc_hook(obj):
+    """Custom encoder hook for unsupported types."""
+    if isinstance(obj, MyCustomType):
+        return obj.to_dict()
+    raise NotImplementedError(f"Cannot encode {type(obj)}")
+
+
+def my_dec_hook(type_, obj):
+    """Custom decoder hook for unsupported types."""
+    if type_ is MyCustomType:
+        return MyCustomType.from_dict(obj)
+    raise NotImplementedError(f"Cannot decode {type_}")
+
+
+DJANGO_MSGSPEC_FIELD = {
+    "ENC_HOOK": my_enc_hook,
+    "DEC_HOOK": my_dec_hook,
+}
+```
+
+You can also use dotted paths to reference functions defined elsewhere:
+
+```python
+# settings.py
+DJANGO_MSGSPEC_FIELD = {
+    "ENC_HOOK": "myapp.hooks.my_enc_hook",
+    "DEC_HOOK": "myapp.hooks.my_dec_hook",
+}
+```
+
+### Available Settings
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `ENC_HOOK` | `Callable[[Any], Any]` or `str` | `None` | Default encoder hook for serializing unsupported types. Called when msgspec encounters a type it cannot serialize natively. |
+| `DEC_HOOK` | `Callable[[type, Any], Any]` or `str` | `None` | Default decoder hook for deserializing custom types. Called when msgspec encounters a type it cannot deserialize natively. |
+
+### Overriding Global Settings
+
+You can always override the global settings on individual fields by passing `enc_hook` or `dec_hook` directly:
+
+```python
+from django_msgspec_field import SchemaField
+
+
+def custom_enc_hook(obj):
+    # Field-specific encoding logic
+    ...
+
+
+class MyModel(models.Model):
+    # Uses global enc_hook/dec_hook from settings
+    data: MyStruct = SchemaField()
+
+    # Uses custom enc_hook, overriding the global setting
+    custom_data: MyStruct = SchemaField(enc_hook=custom_enc_hook)
+```
+
 ## Migrating from django-pydantic-field
 
 If you're migrating from `django-pydantic-field`, here are the key changes:

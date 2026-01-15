@@ -13,6 +13,7 @@ import typing_extensions as te
 
 from .compat.django import BaseContainer, GenericContainer
 from .compat.functools import cached_property
+from .conf import msgspec_field_settings
 
 if ty.TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
@@ -103,12 +104,16 @@ class SchemaAdapter(ty.Generic[ST]):
     def _encoder(self) -> msgspec.json.Encoder:
         """Create a msgspec JSON encoder."""
         enc_hook = self.export_kwargs.get("enc_hook")
+        if enc_hook is None:
+            enc_hook = msgspec_field_settings.enc_hook
         return msgspec.json.Encoder(enc_hook=enc_hook)
 
     @cached_property
     def _decoder(self) -> msgspec.json.Decoder:
         """Create a msgspec JSON decoder for the prepared schema."""
         dec_hook = self.export_kwargs.get("dec_hook")
+        if dec_hook is None:
+            dec_hook = msgspec_field_settings.dec_hook
         strict = self.export_kwargs.get("strict", False)
         return msgspec.json.Decoder(self.prepared_schema, dec_hook=dec_hook, strict=strict)
 
@@ -142,6 +147,8 @@ class SchemaAdapter(ty.Generic[ST]):
 
         # Use msgspec.convert for Python object validation
         dec_hook = self.export_kwargs.get("dec_hook")
+        if dec_hook is None:
+            dec_hook = msgspec_field_settings.dec_hook
         if strict is None:
             strict = self.export_kwargs.get("strict", False)
         try:
@@ -166,7 +173,10 @@ class SchemaAdapter(ty.Generic[ST]):
             return None
 
         # Apply field filtering if configured
-        result = msgspec.to_builtins(value, enc_hook=self.export_kwargs.get("enc_hook"))
+        enc_hook = self.export_kwargs.get("enc_hook")
+        if enc_hook is None:
+            enc_hook = msgspec_field_settings.enc_hook
+        result = msgspec.to_builtins(value, enc_hook=enc_hook)
 
         # Apply include/exclude filters
         # Use sentinel to distinguish between "not passed" and "explicitly set to None"
