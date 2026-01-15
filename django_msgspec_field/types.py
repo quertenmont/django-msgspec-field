@@ -24,7 +24,7 @@ if ty.TYPE_CHECKING:
     SchemaT = ty.Union[
         msgspec.Struct,
         Sequence[ty.Any],
-        Mapping[str, ty.Any],
+        Mapping[ty.Any, ty.Any],
         set[ty.Any],
         frozenset[ty.Any],
     ]
