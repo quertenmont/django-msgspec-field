@@ -1,5 +1,7 @@
 from .fields import SchemaField as SchemaField
 
+__version__ = "0.1.12"
+
 
 def __getattr__(name):
     if name == "_migration_serializers":
