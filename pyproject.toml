@@ -38,7 +38,7 @@ classifiers = [
 requires-python = ">=3.10"
 dependencies = [
     "msgspec>=0.18.0",
-    "django>=3.1,<6",
+    "django>=3.1",
     "typing_extensions",
 ]
 
