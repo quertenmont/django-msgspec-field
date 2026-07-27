@@ -10,6 +10,7 @@ import msgspec
 from rest_framework import renderers
 
 from django_msgspec_field import types
+
 from . import mixins
 
 if ty.TYPE_CHECKING:

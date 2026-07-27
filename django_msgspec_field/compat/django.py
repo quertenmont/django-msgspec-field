@@ -47,7 +47,7 @@ class BaseContainer(abc.ABC):
 class GenericContainer(BaseContainer):
     """Container for generic type annotations in migrations."""
 
-    __slots__ = "origin", "args"
+    __slots__ = "args", "origin"
 
     def __init__(self, origin, args: tuple = ()):
         self.origin = origin
@@ -100,7 +100,7 @@ class DataclassContainer(BaseContainer):
 
     __slots__ = "datacls", "kwargs"
 
-    def __init__(self, datacls: type, kwargs: ty.Dict[str, ty.Any]):
+    def __init__(self, datacls: type, kwargs: dict[str, ty.Any]):
         self.datacls = datacls
         self.kwargs = kwargs
 
@@ -189,20 +189,20 @@ class TypingSerializer(BaseSerializer):
 AnnotatedAlias = te._AnnotatedAlias
 
 if sys.version_info >= (3, 14):
-    GenericTypes: ty.Tuple[ty.Any, ...] = (types.GenericAlias, type(ty.List[int]), type(ty.List), ty.Union)
+    GenericTypes: tuple[ty.Any, ...] = (types.GenericAlias, type(list[int]), type(list), ty.Union)
 elif sys.version_info >= (3, 10):
     GenericTypes = (
         types.GenericAlias,
-        type(ty.List[int]),
-        type(ty.List),
+        type(list[int]),
+        type(list),
         type(ty.Union[int, str]),
         types.UnionType,
     )
 else:
     GenericTypes = (
         types.GenericAlias,
-        type(ty.List[int]),
-        type(ty.List),
+        type(list[int]),
+        type(list),
         type(ty.Union[int, str]),
     )
 

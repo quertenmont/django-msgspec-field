@@ -2,15 +2,13 @@
 Type stubs for django_msgspec_field.fields
 """
 
-from __future__ import annotations
-
 import typing as ty
 
 import typing_extensions as te
-from django.db.models.fields.json import JSONField
 from django.db.models.expressions import BaseExpression
+from django.db.models.fields.json import JSONField
 
-from .types import ST, SchemaT, ExportKwargs
+from .types import ST, ExportKwargs, SchemaT
 
 class _SchemaFieldKwargs(ExportKwargs, total=False):
     name: str | None
@@ -26,7 +24,7 @@ class _SchemaFieldKwargs(ExportKwargs, total=False):
     unique_for_date: str | None
     unique_for_month: str | None
     unique_for_year: str | None
-    choices: ty.Sequence[ty.Tuple[str, str]] | None
+    choices: ty.Sequence[tuple[str, str]] | None
     help_text: str | None
     db_column: str | None
     db_tablespace: str | None

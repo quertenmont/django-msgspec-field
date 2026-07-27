@@ -20,7 +20,7 @@ if ty.TYPE_CHECKING:
 
     from django.db.models import Model
 
-    DjangoModelType = ty.Type[Model]
+    DjangoModelType = type[Model]
     SchemaT = ty.Union[
         msgspec.Struct,
         Sequence[ty.Any],
@@ -243,7 +243,7 @@ class SchemaAdapter(ty.Generic[ST]):
         if self.allow_null:
             schema = ty.Optional[schema]  # type: ignore
 
-        return ty.cast(ty.Type[ST], schema)
+        return ty.cast(type[ST], schema)
 
     prepared_schema = cached_property(_prepare_schema)
 
@@ -261,7 +261,7 @@ class SchemaAdapter(ty.Generic[ST]):
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(bound={self.is_bound}, schema={self.schema!r})"
 
-    def __eq__(self, other: ty.Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             return NotImplemented
 

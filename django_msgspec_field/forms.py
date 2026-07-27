@@ -19,7 +19,7 @@ if ty.TYPE_CHECKING:
     from django.forms.widgets import Widget
 
 
-__all__ = ("SchemaField", "JSONFormSchemaWidget")
+__all__ = ("JSONFormSchemaWidget", "SchemaField")
 
 
 class SchemaField(JSONField, ty.Generic[types.ST]):

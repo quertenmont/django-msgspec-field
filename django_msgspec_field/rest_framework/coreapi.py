@@ -18,7 +18,6 @@ try:
     class AutoSchema(drf_coreapi.AutoSchema):
         """Legacy CoreAPI AutoSchema with msgspec support."""
 
-        pass
 
 except ImportError:
     # CoreAPI not installed

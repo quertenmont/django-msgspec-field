@@ -17,8 +17,8 @@ from django.db.models.fields.json import JSONField, KeyTransform
 from django.db.models.lookups import Transform
 from django.db.models.query_utils import DeferredAttribute
 
-from .compat.django import BaseContainer, GenericContainer
 from . import forms, types
+from .compat.django import BaseContainer, GenericContainer
 
 if ty.TYPE_CHECKING:
     import json
@@ -40,7 +40,7 @@ if ty.TYPE_CHECKING:
         unique_for_date: str | None
         unique_for_month: str | None
         unique_for_year: str | None
-        choices: ty.Sequence[ty.Tuple[str, str]] | None
+        choices: ty.Sequence[tuple[str, str]] | None
         help_text: str | None
         db_column: str | None
         db_tablespace: str | None
@@ -53,7 +53,7 @@ if ty.TYPE_CHECKING:
         decoder: ty.Callable[[], json.JSONDecoder]
 
 
-__all__ = ("SchemaField", "MsgspecSchemaField")
+__all__ = ("MsgspecSchemaField", "SchemaField")
 
 
 class SchemaAttribute(DeferredAttribute):
@@ -153,7 +153,7 @@ class MsgspecSchemaField(JSONField, ty.Generic[types.ST]):
             if self.has_default():
                 self.get_prep_value(self.get_default())
         except msgspec.ValidationError as exc:
-            message = f"Default value cannot be adapted to the schema. msgspec error: \n{str(exc)}"
+            message = f"Default value cannot be adapted to the schema. msgspec error: \n{exc!s}"
             performed_checks.append(checks.Error(message, obj=self, id="msgspec.E002"))
 
         if {"include", "exclude"} & self.export_kwargs.keys():
@@ -170,7 +170,7 @@ class MsgspecSchemaField(JSONField, ty.Generic[types.ST]):
                     # Perform the full round-trip transformation to test the export ability.
                     self.adapter.validate_python(self.get_prep_value(schema_default))
                 except msgspec.ValidationError as exc:
-                    message = f"Export arguments may lead to data integrity problems. msgspec error: \n{str(exc)}"
+                    message = f"Export arguments may lead to data integrity problems. msgspec error: \n{exc!s}"
                     hint = "Please review `include` and `exclude` arguments."
                     performed_checks.append(checks.Warning(message, obj=self, hint=hint, id="msgspec.W003"))
 

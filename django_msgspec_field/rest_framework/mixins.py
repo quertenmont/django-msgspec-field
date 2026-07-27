@@ -6,8 +6,8 @@ from __future__ import annotations
 
 import typing as ty
 
-from django_msgspec_field.compat.typing import get_args
 from django_msgspec_field import types
+from django_msgspec_field.compat.typing import get_args
 
 if ty.TYPE_CHECKING:
     from collections.abc import Mapping
