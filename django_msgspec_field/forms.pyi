@@ -2,11 +2,9 @@
 Type stubs for django_msgspec_field.forms
 """
 
-from __future__ import annotations
-
 import typing as ty
-import typing_extensions as te
 
+import typing_extensions as te
 from django.forms.fields import JSONField
 from django.forms.widgets import Widget
 
