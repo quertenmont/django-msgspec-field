@@ -2,11 +2,9 @@
 Type stubs for django_msgspec_field.rest_framework
 """
 
-from __future__ import annotations
-
 import typing as ty
-import typing_extensions as te
 
+import typing_extensions as te
 from rest_framework import fields as drf_fields
 from rest_framework import parsers, renderers
 from rest_framework.schemas import openapi

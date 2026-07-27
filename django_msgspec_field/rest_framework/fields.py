@@ -53,7 +53,7 @@ class SchemaField(fields.Field, ty.Generic[types.ST]):
         except msgspec.DecodeError as exc:
             raise exceptions.ValidationError(str(exc), code="invalid")
 
-    def to_representation(self, value: ty.Optional[types.ST]):
+    def to_representation(self, value: types.ST | None):
         try:
             prep_value = self.adapter.validate_python(value)
             return self.adapter.dump_python(prep_value)

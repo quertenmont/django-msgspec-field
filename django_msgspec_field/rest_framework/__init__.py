@@ -5,15 +5,15 @@ Django REST Framework integration for msgspec schemas.
 from . import coreapi as coreapi
 from . import openapi as openapi
 from .fields import SchemaField as SchemaField
+from .openapi import AutoSchema as AutoSchema
 from .parsers import SchemaParser as SchemaParser
 from .renderers import SchemaRenderer as SchemaRenderer
-from .openapi import AutoSchema as AutoSchema
 
 __all__ = (
-    "coreapi",
-    "openapi",
+    "AutoSchema",
     "SchemaField",
     "SchemaParser",
     "SchemaRenderer",
-    "AutoSchema",
+    "coreapi",
+    "openapi",
 )
