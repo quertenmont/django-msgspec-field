@@ -4,7 +4,19 @@ Backward compatibility module for migration serializers.
 
 import warnings
 
-from .compat.django import *
+from .compat.django import (
+    AnnotatedAlias,
+    BaseContainer,
+    BaseContainerSerializer,
+    DataclassContainer,
+    DataclassContainerSerializer,
+    GenericContainer,
+    GenericTypes,
+    MsgspecMetaSerializer,
+    TypingSerializer,
+    UnionType,
+    UnionTypeSerializer,
+)
 
 __all__ = [
     "AnnotatedAlias",
