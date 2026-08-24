@@ -47,7 +47,7 @@ class GenericContainer(BaseContainer):
     """Container for generic type annotations in migrations."""
 
     # DO NOT CHANGE: __slots__ order MUST match __init__ signature or serialization breaks
-    __slots__ = "origin", "args"  # fmt: skip
+    __slots__ = "args", "origin"  # fmt: skip
 
     def __init__(self, origin, args: tuple = ()):
         self.origin = origin
@@ -193,7 +193,7 @@ AnnotatedAlias = te._AnnotatedAlias
 GenericTypes = (
     types.GenericAlias,  # list[int], dict[str, int]
     type(list[int]),  # types.GenericAlias instance
-    type(ty.List[int]),  # typing._GenericAlias - DIFFERENT from above, do not dedupe
+    type(list[int]),  # typing._GenericAlias - DIFFERENT from above, do not dedupe
     type(ty.Union[int, str]),  # noqa: UP007 - we need the type object, not annotation syntax
     types.UnionType,  # int | str
 )
@@ -211,7 +211,7 @@ MigrationWriter.register_serializer(ty.ForwardRef, TypingSerializer)
 MigrationWriter.register_serializer(type(ty.Union), TypingSerializer)  # type: ignore
 MigrationWriter.register_serializer(ty._SpecialForm, TypingSerializer)  # type: ignore
 # DO NOT CHANGE: type(ty.List) not type(list) - they are different!
-MigrationWriter.register_serializer(type(ty.List), TypingSerializer)  # typing._SpecialGenericAlias  # fmt: skip
+MigrationWriter.register_serializer(type(list), TypingSerializer)  # typing._SpecialGenericAlias  # fmt: skip
 
 # Python 3.11+ only (minimum version)
 UnionType = (types.UnionType, type(ty.Union[int, str]))  # noqa: UP007 - we need the type object
