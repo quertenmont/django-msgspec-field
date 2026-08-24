@@ -190,7 +190,7 @@ AnnotatedAlias = te._AnnotatedAlias
 
 if sys.version_info >= (3, 14):
     GenericTypes: tuple[ty.Any, ...] = (types.GenericAlias, type(list[int]), ty.Union)
-else:  # Python 3.10-3.13
+else:  # Python 3.11-3.13
     GenericTypes = (
         types.GenericAlias,
         type(list[int]),
@@ -213,7 +213,7 @@ MigrationWriter.register_serializer(type(ty.Union), TypingSerializer)  # type: i
 MigrationWriter.register_serializer(ty._SpecialForm, TypingSerializer)  # type: ignore
 MigrationWriter.register_serializer(type(list), TypingSerializer)  # typing._SpecialGenericAlias
 
-# Python 3.10+ only (minimum version)
+# Python 3.11+ only (minimum version)
 UnionType = (types.UnionType, type(ty.Union[int, str]))  # noqa: UP007 - we need the type object
 
 

@@ -29,8 +29,8 @@ test_types = [
     t.ForwardRef("str"),
 ]
 
-# Add UnionType tests for Python 3.10+
-if sys.version_info >= (3, 10):
+# Add UnionType tests for Python 3.11+
+if sys.version_info >= (3, 11):
     test_types.extend([
         float | None,
         int | str,
@@ -56,7 +56,7 @@ def test_serialize_eval_idempotent(raw_type):
     assert eval(expression, imports) == raw_type
 
 
-@pytest.mark.skipif(sys.version_info < (3, 10), reason="UnionType requires Python 3.10+")
+@pytest.mark.skipif(sys.version_info < (3, 11), reason="UnionType requires Python 3.11+")
 class TestUnionTypeUnwrap:
     """Tests for UnionType unwrapping fix."""
 
