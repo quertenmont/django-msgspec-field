@@ -213,11 +213,8 @@ MigrationWriter.register_serializer(type(ty.Union), TypingSerializer)  # type: i
 MigrationWriter.register_serializer(ty._SpecialForm, TypingSerializer)  # type: ignore
 MigrationWriter.register_serializer(type(list), TypingSerializer)  # typing._SpecialGenericAlias
 
-
-if sys.version_info >= (3, 10):
-    UnionType = (types.UnionType, type(ty.Union[int, str]))
-else:
-    UnionType = (type(ty.Union[int, str]),)
+# Python 3.10+ only (minimum version)
+UnionType = (types.UnionType, type(ty.Union[int, str]))  # noqa: UP007 - we need the type object
 
 
 class UnionTypeSerializer(BaseSerializer):
