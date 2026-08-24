@@ -20,11 +20,17 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
       - name: Install pre-commit
-        run: pip install pre-commit
+        run: uv tool install pre-commit
 
       - name: Run pre-commit autoupdate
-        run: pre-commit autoupdate
+        run: uv tool run pre-commit autoupdate
+
+      - name: Update uv.lock
+        run: uv lock
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
