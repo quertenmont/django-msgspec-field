@@ -4,9 +4,9 @@ Backward compatibility module for migration serializers.
 
 import warnings
 
-from .compat.django import *  # noqa: F403, F401
+from .compat.django import *
 
-__all__ = [  # noqa: F405
+__all__ = [
     "AnnotatedAlias",
     "BaseContainer",
     "BaseContainerSerializer",
