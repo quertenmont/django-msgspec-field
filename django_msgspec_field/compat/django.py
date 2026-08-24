@@ -46,8 +46,10 @@ class BaseContainer(abc.ABC):
 class GenericContainer(BaseContainer):
     """Container for generic type annotations in migrations."""
 
-    # DO NOT CHANGE: __slots__ order MUST match __init__ signature or serialization breaks
-    __slots__ = "args", "origin"  # fmt: skip  # noqa: RUF100
+    __slots__ = ("args", "origin")
+    # Reconstruction is positional as GenericContainer(origin, args); keep this
+    # explicit so __slots__ can stay alphabetically sorted for linters.
+    _serialize_order = ("origin", "args")
 
     def __init__(self, origin, args: tuple = ()):
         self.origin = origin
@@ -147,7 +149,8 @@ class BaseContainerSerializer(BaseSerializer):
 
     def _iter_container_attrs(self):
         container = self.value
-        for attr in container.__slots__:
+        order = getattr(container, "_serialize_order", container.__slots__)
+        for attr in order:
             yield getattr(container, attr)
 
 
@@ -188,12 +191,12 @@ class TypingSerializer(BaseSerializer):
 
 AnnotatedAlias = te._AnnotatedAlias
 
-# GenericTypes includes all type objects that need TypingSerializer
-# DO NOT CHANGE: These type() calls are different and all necessary
-GenericTypes = (  # fmt: skip
+# GenericTypes lists every type object that must route through TypingSerializer.
+# The typing-module aliases are referenced via their private classes so linters
+# (UP006) cannot rewrite `typing.List` to `list`, which would change the type.
+GenericTypes = (
     types.GenericAlias,  # list[int], dict[str, int]
-    type(list[int]),  # types.GenericAlias instance
-    type(list[int]),  # typing._GenericAlias - DIFFERENT from above, do not dedupe  # noqa: RUF100
+    ty._GenericAlias,  # type: ignore  # typing.List[int], typing.Dict[str, int]
     type(ty.Union[int, str]),  # noqa: UP007 - we need the type object, not annotation syntax
     types.UnionType,  # int | str
 )
@@ -210,8 +213,8 @@ for type_ in GenericTypes:
 MigrationWriter.register_serializer(ty.ForwardRef, TypingSerializer)
 MigrationWriter.register_serializer(type(ty.Union), TypingSerializer)  # type: ignore
 MigrationWriter.register_serializer(ty._SpecialForm, TypingSerializer)  # type: ignore
-# DO NOT CHANGE: type(ty.List) not type(list) - they are different!
-MigrationWriter.register_serializer(type(list), TypingSerializer)  # typing._SpecialGenericAlias  # fmt: skip  # noqa: RUF100
+# typing.List, typing.Dict, ... (private class avoids UP006 rewriting to `list`).
+MigrationWriter.register_serializer(ty._SpecialGenericAlias, TypingSerializer)  # type: ignore
 
 # Python 3.11+ only (minimum version)
 UnionType = (types.UnionType, type(ty.Union[int, str]))  # noqa: UP007 - we need the type object
