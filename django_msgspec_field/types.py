@@ -22,13 +22,7 @@ if ty.TYPE_CHECKING:
     from django.db.models import Model
 
     DjangoModelType = type[Model]
-    SchemaT = ty.Union[
-        msgspec.Struct,
-        Sequence[ty.Any],
-        Mapping[ty.Any, ty.Any],
-        set[ty.Any],
-        frozenset[ty.Any],
-    ]
+    SchemaT = msgspec.Struct | Sequence[ty.Any] | Mapping[ty.Any, ty.Any] | set[ty.Any] | frozenset[ty.Any]
 
 ST = ty.TypeVar("ST", bound="SchemaT")
 

@@ -1,17 +1,17 @@
 import sys
 import types
 import typing as t
-import typing_extensions as te
 
-from django.db.migrations.writer import MigrationWriter
 import pytest
+import typing_extensions as te
+from django.db.migrations.writer import MigrationWriter
 
 import django_msgspec_field
 
 try:
     from django_msgspec_field.compat.django import GenericContainer
 except ImportError:
-    from django_msgspec_field._migration_serializers import GenericContainer  # noqa
+    from django_msgspec_field._migration_serializers import GenericContainer
 
 try:
     import annotationlib
@@ -24,19 +24,21 @@ test_types = [
     list[str],
     t.Literal["foo"],
     t.Union[t.Literal["foo"], list[str]],
-    list[t.Union[int, bool]],
-    tuple[list[t.Literal[1]], t.Union[str, t.Literal["foo"]]],
+    list[int | bool],
+    tuple[list[t.Literal[1]], str | t.Literal["foo"]],
     t.ForwardRef("str"),
 ]
 
-# Add UnionType tests for Python 3.10+
-if sys.version_info >= (3, 10):
-    test_types.extend([
-        float | None,
-        int | str,
-        dict[str, float | None],
-        list[int | str | None],
-    ])
+# Add UnionType tests for Python 3.11+
+if sys.version_info >= (3, 11):
+    test_types.extend(
+        [
+            float | None,
+            int | str,
+            dict[str, float | None],
+            list[int | str | None],
+        ]
+    )
 
 
 @pytest.mark.parametrize("raw_type", test_types)
@@ -50,13 +52,16 @@ def test_serialize_eval_idempotent(raw_type):
     raw_type = GenericContainer.wrap(raw_type)
     expression, _ = MigrationWriter.serialize(raw_type)
     imports = dict(
-        typing=t, typing_extensions=te, django_msgspec_field=django_msgspec_field, annotationlib=annotationlib,
+        typing=t,
+        typing_extensions=te,
+        django_msgspec_field=django_msgspec_field,
+        annotationlib=annotationlib,
         types=types,
     )
     assert eval(expression, imports) == raw_type
 
 
-@pytest.mark.skipif(sys.version_info < (3, 10), reason="UnionType requires Python 3.10+")
+@pytest.mark.skipif(sys.version_info < (3, 11), reason="UnionType requires Python 3.11+")
 class TestUnionTypeUnwrap:
     """Tests for UnionType unwrapping fix."""
 

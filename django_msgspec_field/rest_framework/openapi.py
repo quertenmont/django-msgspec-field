@@ -189,7 +189,7 @@ class AutoSchema(openapi.AutoSchema):
                 # Collect any $defs from the schema
                 if "$defs" in schema:
                     self.collected_schema_defs.update(schema.pop("$defs"))
-            except Exception:
+            except (TypeError, ValueError, AttributeError):
                 # If schema generation fails, use a generic object schema
                 inner_schemas[field_name] = {"type": "object"}
 

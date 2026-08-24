@@ -1,6 +1,12 @@
 default_language_version:
     python: python3.14
 
+# https://pre-commit.ci configuration. Disable auto-fixing on PRs so the bot
+# cannot rewrite intentional code (e.g. private typing references) and push
+# commits back onto the branch.
+ci:
+  autofix_prs: false
+
 repos:
   - repo: meta
     hooks:

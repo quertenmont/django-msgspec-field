@@ -94,7 +94,7 @@ class MsgspecFieldSettings:
             from django.conf import settings
 
             return getattr(settings, "DJANGO_MSGSPEC_FIELD", {})
-        except Exception:
+        except (ImportError, AttributeError):
             return {}
 
     def __getattr__(self, attr: str) -> ty.Any:
