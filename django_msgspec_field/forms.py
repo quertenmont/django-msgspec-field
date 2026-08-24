@@ -28,7 +28,7 @@ class SchemaField(JSONField, ty.Generic[types.ST]):
     """
 
     adapter: types.SchemaAdapter[types.ST]
-    default_error_messages = {
+    default_error_messages: ty.ClassVar[dict[str, str]] = {
         "schema_error": _("Schema didn't match for %(title)s."),
     }
 

@@ -47,7 +47,7 @@ class BaseContainer(abc.ABC):
 class GenericContainer(BaseContainer):
     """Container for generic type annotations in migrations."""
 
-    __slots__ = "args", "origin"
+    __slots__ = "origin", "args"
 
     def __init__(self, origin, args: tuple = ()):
         self.origin = origin
@@ -189,21 +189,14 @@ class TypingSerializer(BaseSerializer):
 AnnotatedAlias = te._AnnotatedAlias
 
 if sys.version_info >= (3, 14):
-    GenericTypes: tuple[ty.Any, ...] = (types.GenericAlias, type(list[int]), type(list), ty.Union)
-elif sys.version_info >= (3, 10):
+    GenericTypes: tuple[ty.Any, ...] = (types.GenericAlias, type(list[int]), ty.Union)
+else:  # Python 3.10-3.13
     GenericTypes = (
         types.GenericAlias,
         type(list[int]),
-        type(list),
-        type(ty.Union[int, str]),
+        type(ty.List[int]),  # typing._GenericAlias - for typing.List, typing.Dict, etc.
+        type(ty.Union[int, str]),  # noqa: UP007 - we need the type object, not annotation syntax
         types.UnionType,
-    )
-else:
-    GenericTypes = (
-        types.GenericAlias,
-        type(list[int]),
-        type(list),
-        type(ty.Union[int, str]),
     )
 
 
@@ -218,6 +211,7 @@ for type_ in GenericTypes:
 MigrationWriter.register_serializer(ty.ForwardRef, TypingSerializer)
 MigrationWriter.register_serializer(type(ty.Union), TypingSerializer)  # type: ignore
 MigrationWriter.register_serializer(ty._SpecialForm, TypingSerializer)  # type: ignore
+MigrationWriter.register_serializer(type(ty.List), TypingSerializer)  # typing._SpecialGenericAlias
 
 
 if sys.version_info >= (3, 10):
