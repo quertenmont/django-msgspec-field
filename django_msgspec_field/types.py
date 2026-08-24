@@ -4,6 +4,7 @@ Core types and schema adapter for msgspec integration with Django.
 
 from __future__ import annotations
 
+import inspect
 import sys
 import typing as ty
 from collections import ChainMap
@@ -151,21 +152,13 @@ class SchemaAdapter(ty.Generic[ST]):
             dec_hook = msgspec_field_settings.dec_hook
         if strict is None:
             strict = self.export_kwargs.get("strict", False)
-        try:
-            return msgspec.convert(value, self.prepared_schema, dec_hook=dec_hook, strict=strict)
-        except msgspec.ValidationError:
-            raise
+        return msgspec.convert(value, self.prepared_schema, dec_hook=dec_hook, strict=strict)
 
     def validate_json(self, value: str | bytes, *, strict: bool | None = None) -> ST:
         """Validate a JSON string/bytes against the schema."""
         if isinstance(value, str):
             value = value.encode("utf-8")
-        try:
-            return self._decoder.decode(value)
-        except msgspec.DecodeError:
-            raise
-        except msgspec.ValidationError:  # type: ignore
-            raise
+        return self._decoder.decode(value)
 
     def dump_python(self, value: ty.Any, **override_kwargs) -> ty.Any:
         """Dump the value to a JSON-compatible Python object."""
@@ -241,7 +234,7 @@ class SchemaAdapter(ty.Generic[ST]):
             raise ImproperlyConfiguredSchema(error_msg)
 
         if self.allow_null:
-            schema = ty.Optional[schema]  # type: ignore
+            schema = schema | None  # type: ignore
 
         return ty.cast(type[ST], schema)
 
@@ -343,9 +336,7 @@ def get_annotations(obj: ty.Any) -> dict[str, ty.Any]:
 
         return _get_annotations(obj)
     except ImportError:
-        if isinstance(obj, type):
-            return obj.__dict__.get("__annotations__", {})
-        return getattr(obj, "__annotations__", {})
+        return inspect.get_annotations(obj)
 
 
 def get_annotated_type(obj, field, default=None) -> ty.Any:
