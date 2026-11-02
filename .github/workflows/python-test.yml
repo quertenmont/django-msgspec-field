@@ -29,7 +29,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
-        python-version: '3.x'
+        python-version: '3.14'  # psycopg-binary has no 3.15 wheels yet
     - name: Install uv
       uses: astral-sh/setup-uv@v5
     - name: Install dependencies
@@ -46,7 +46,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
-        python-version: '3.x'
+        python-version: '3.14'  # psycopg-binary has no 3.15 wheels yet
     - name: Install uv
       uses: astral-sh/setup-uv@v5
     - name: Install dependencies
@@ -89,8 +89,15 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         allow-prereleases: true
+    - name: Get runner image
+      id: image
+      run: echo "os=${ImageOS}" >> "$GITHUB_OUTPUT"
     - name: Install uv
       uses: astral-sh/setup-uv@v5
+      with:
+        # mysqlclient is built from source and links to the system libmysqlclient,
+        # so cached wheels must not be shared across runner OS images.
+        cache-suffix: ${{ steps.image.outputs.os }}
     - name: Install system dependencies
       run: |
         sudo apt update && sudo apt install -qy python3-dev default-libmysqlclient-dev build-essential
